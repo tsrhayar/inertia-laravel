@@ -1,81 +1,74 @@
 <template>
-    Index pages
-
     <div class="container-fluid">
+        <div
+            v-if="$page.props.flash.message"
+            :class="$page.props.flash.class"
+            role="alert"
+        >
+            {{ $page.props.flash.message }}
+        </div>
         <div class="row py-2">
             <div class="col-2 fs-14px">
                 <Categories :categories="categories" />
             </div>
             <div class="col-10">
-                <div class="card overflow-hidden">
-                    <table class="table table-striped fs-14px table-responsive">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Title</th>
-                                <th>Body</th>
-                                <th>Category</th>
-                                <th>Done</th>
-                                <th>Created</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="(task, index) in tasks.data"
-                                :key="index"
-                            >
-                                <td>{{ task.id }}</td>
-                                <td class="truncate-td">{{ task.title }}</td>
-                                <td class="truncate-td">{{ task.body }}</td>
-                                <td class="truncate-td">
-                                    {{ task.category.name }}
-                                </td>
-                                <td>
-                                    <span
-                                        v-if="task.done"
-                                        class="badge text-bg-success"
-                                        >Done</span
-                                    >
-                                    <span v-else class="badge text-bg-danger"
-                                        >Processing ...</span
-                                    >
-                                </td>
-                                <td>{{ task.created_at }}</td>
-                                <td>Action</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <nav class="d-flex justify-content-center fs-14px">
-                        <ul class="pagination">
-                            <li
-                                class="page-item"
-                                v-for="(link, index) in tasks.links"
-                                :key="index"
-                            >
-                                <Link
-                                    :class="[
-                                        'page-link',
-                                        { active: link.active },
-                                        {
-                                            disabled:
-                                                (tasks.links[1].active &&
-                                                    index == 0) ||
-                                                (tasks.links[
-                                                    tasks.links.length - 2
-                                                ].active &&
-                                                    index ==
-                                                        tasks.links.length - 1),
-                                        },
-                                        { 'pointer-events-none': link.active },
-                                    ]"
-                                    :disabled="link.active"
-                                    :href="link.url || '#'"
-                                    ><span v-html="link.label"></span
-                                ></Link>
-                            </li>
-                        </ul>
-                    </nav>
+                <div
+                    class="btn-group mb-2 me-2"
+                    role="group"
+                    aria-label="Basic outlined example"
+                >
+                    <Link
+                        href="/order/id/asc/tasks"
+                        :class="[
+                            'btn',
+                            'btn-sm',
+                            'btn-outline-primary',
+                            { active: isActiveRoute('/order/id/asc/tasks') },
+                        ]"
+                    >
+                        ID <i class="fa-solid fa-arrow-up"></i>
+                    </Link>
+                    <Link
+                        href="/order/id/desc/tasks"
+                        :class="[
+                            'btn',
+                            'btn-sm',
+                            'btn-outline-primary',
+                            { active: isActiveRoute('/order/id/desc/tasks') },
+                        ]"
+                    >
+                        ID <i class="fa-solid fa-arrow-down"></i>
+                    </Link>
+
+                    <Link
+                        href="/order/title/asc/tasks"
+                        :class="[
+                            'btn',
+                            'btn-sm',
+                            'btn-outline-primary',
+                            { active: isActiveRoute('/order/title/asc/tasks') },
+                        ]"
+                    >
+                        Title A-Z <i class="fa-solid fa-arrow-up"></i>
+                    </Link>
+                    <Link
+                        href="/order/title/desc/tasks"
+                        :class="[
+                            'btn',
+                            'btn-sm',
+                            'btn-outline-primary',
+                            {
+                                active: isActiveRoute(
+                                    '/order/title/desc/tasks'
+                                ),
+                            },
+                        ]"
+                    >
+                        Title Z-A <i class="fa-solid fa-arrow-down"></i>
+                    </Link>
+                </div>
+                <div>
+                    <TableTasks :tasks="tasks" />
                 </div>
             </div>
         </div>
@@ -84,7 +77,9 @@
 
 <script setup>
 import { Link } from "@inertiajs/vue3";
+
 import Categories from "@/Components/Categories.vue";
+import TableTasks from "@/Components/TableTasks.vue";
 const props = defineProps({
     tasks: {
         type: Object,
@@ -96,7 +91,9 @@ const props = defineProps({
     },
 });
 
-
+const isActiveRoute = (path) => {
+    return window.location.pathname == path;
+};
 </script>
 
 <style>

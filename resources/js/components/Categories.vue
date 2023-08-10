@@ -1,18 +1,31 @@
 <template>
-    <div class="card mb-2 overflow-hidden">
+    <div class="row mb-2 overflow-hidden">
+        <span class="text-center mb-2">Filter by category</span>
         <div class="btn-group-vertical">
+            <Link
+                :href="`/`"
+                :class="[
+                    'btn',
+                    'btn-outline-secondary',
+                    { active: isAll() },
+                    { 'pointer-events-none': isAll() },
+                ]"
+            >
+                ALL
+            </Link>
             <Link
                 v-for="(category, index) in categories"
                 :key="index"
                 :href="`/category/${category.id}/tasks`"
                 :class="[
                     'btn',
-                    'btn-primary',
+                    'btn-outline-secondary',
                     { active: isActive(category.id) },
+                    { 'pointer-events-none': isActive(category.id) },
                 ]"
             >
-                 {{ category.name }}</Link
-            >
+                {{ category.name }}
+            </Link>
         </div>
     </div>
 </template>
@@ -28,15 +41,14 @@ const props = defineProps({
 });
 
 const isActive = (categoryId) => {
-    // Get the current URL path and split it into parts
     const currentPathParts = window.location.pathname.split("/");
-
-    // Extract the category ID from the URL
     const urlCategoryId = parseInt(
         currentPathParts[currentPathParts.length - 2]
     );
-
-    // Compare the URL category ID with the provided categoryId
     return urlCategoryId === categoryId;
+};
+
+const isAll = () => {
+    return window.location.pathname == "/";
 };
 </script>

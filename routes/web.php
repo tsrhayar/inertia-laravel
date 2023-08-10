@@ -15,4 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [TaskController::class, 'index'])->name('home');
+Route::resource('/tasks', TaskController::class);
 Route::get('/category/{category}/tasks', [TaskController::class, 'getTasksByCategory'])->name('category.tasks');
+Route::get('/order/{column}/{direction}/tasks', [TaskController::class, 'getTasksOrderedBy'])->name('order.tasks');

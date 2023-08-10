@@ -10,13 +10,20 @@ class Task extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'body',
+        'done',
+        'category_id'
+    ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function getCreatedAtAttribute($value) {
+    public function getCreatedAtAttribute($value)
+    {
         return Carbon::parse($value)->diffForHumans();
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TaskRequest;
 use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
@@ -26,14 +27,39 @@ class TaskController extends Controller
     public function create()
     {
         //
+        $categories = Category::all();
+        return Inertia::render('Tasks/Create', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(TaskRequest $request)
     {
         //
+        // if ($request->validated()) {
+        //     Task::create([
+        //         'title' => $request->title,
+        //         'body' => $request->body,
+        //         'category_id' => $request->category_id,
+        //     ]);
+
+        //     return redirect()->route('home')->with([
+        //         'message' => 'Task created successfully',
+        //         'class' => 'alert alert-success'
+        //     ]);
+        // }
+
+        Task::create($request->validate([
+            'title' => ['min:4', 'required', 'max:50'],
+            'body' => ['min:4', 'required', 'max:50'],
+            'category_id' => ['required'],
+        ]));
+
+        return to_route('tasks.index')->with([
+            'message' => 'Task created successfully',
+            'class' => 'alert alert-success'
+        ]);
     }
 
     /**
@@ -71,7 +97,15 @@ class TaskController extends Controller
     public function getTasksByCategory(Category $category)
     {
         $categories = Category::has('tasks')->get();
-        $tasks = $category->tasks()->with('category')->paginate(1);
+        $tasks = $category->tasks()->with('category')->paginate(5);
+        return Inertia::render('Tasks/Index', compact('tasks', 'categories'));
+
+    }
+
+    public function getTasksOrderedBy($column, $direction)
+    {
+        $categories = Category::has('tasks')->get();
+        $tasks = Task::with('category')->orderBy($column, $direction)->paginate(5);
         return Inertia::render('Tasks/Index', compact('tasks', 'categories'));
 
     }
