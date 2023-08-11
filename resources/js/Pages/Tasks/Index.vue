@@ -18,7 +18,7 @@
                     aria-label="Basic outlined example"
                 >
                     <Link
-                        href="/order/id/asc/tasks"
+                        :href="route('order.tasks', ['id', 'asc'])"
                         :class="[
                             'btn',
                             'btn-sm',
@@ -29,7 +29,7 @@
                         ID <i class="fa-solid fa-arrow-up"></i>
                     </Link>
                     <Link
-                        href="/order/id/desc/tasks"
+                    :href="route('order.tasks', ['id', 'desc'])"
                         :class="[
                             'btn',
                             'btn-sm',
@@ -41,7 +41,7 @@
                     </Link>
 
                     <Link
-                        href="/order/title/asc/tasks"
+                    :href="route('order.tasks', ['title', 'asc'])"
                         :class="[
                             'btn',
                             'btn-sm',
@@ -52,7 +52,7 @@
                         Title A-Z <i class="fa-solid fa-arrow-up"></i>
                     </Link>
                     <Link
-                        href="/order/title/desc/tasks"
+                    :href="route('order.tasks', ['title', 'desc'])"
                         :class="[
                             'btn',
                             'btn-sm',

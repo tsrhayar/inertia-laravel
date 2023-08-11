@@ -19,12 +19,12 @@
                         <Link
                             class="nav-link active"
                             aria-current="page"
-                            href="/"
+                            :href="route('home')"
                             >Home Page</Link
                         >
                     </li>
                     <li class="nav-item">
-                        <Link class="nav-link" href="/tasks/create">Create Task</Link>
+                        <Link class="nav-link"  :href="route('tasks.create')">Create Task</Link>
                     </li>
                 </ul>
             </div>

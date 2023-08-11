@@ -28,15 +28,31 @@
                     >
                 </td>
                 <td>{{ task.created_at }}</td>
-                <td>Action</td>
+                <td>
+                    <Link
+                        class="btn btn-sm btn-outline-success"
+                        :href="route('tasks.edit', task.id)"
+                    >
+                        Update
+                    </Link>
+                    <button
+                        class="btn btn-sm btn-outline-danger ms-1"
+                        @click="deleteTask(task)"
+                    >
+                        Delete
+                    </button>
+                </td>
             </tr>
         </tbody>
     </table>
-   <TableTasksPagination :tasks="tasks" />
+    <TableTasksPagination :tasks="tasks" />
 </template>
 
 <script setup>
-import TableTasksPagination from '@/Components/TableTasksPagination.vue';
+import { Link } from "@inertiajs/vue3";
+import TableTasksPagination from "@/Components/TableTasksPagination.vue";
+import { router } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
 
 const props = defineProps({
     tasks: {
@@ -44,4 +60,21 @@ const props = defineProps({
         required: true,
     },
 });
+
+const deleteTask = (task) => {
+    Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            router.delete(route("tasks.destroy", task.id));
+            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+        }
+    });
+};
 </script>

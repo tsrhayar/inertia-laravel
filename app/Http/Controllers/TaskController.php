@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Route;
 
 class TaskController extends Controller
 {
@@ -36,20 +37,6 @@ class TaskController extends Controller
      */
     public function store(TaskRequest $request)
     {
-        //
-        // if ($request->validated()) {
-        //     Task::create([
-        //         'title' => $request->title,
-        //         'body' => $request->body,
-        //         'category_id' => $request->category_id,
-        //     ]);
-
-        //     return redirect()->route('home')->with([
-        //         'message' => 'Task created successfully',
-        //         'class' => 'alert alert-success'
-        //     ]);
-        // }
-
         Task::create($request->validate([
             'title' => ['min:4', 'required', 'max:50'],
             'body' => ['min:4', 'required', 'max:50'],
@@ -76,6 +63,8 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         //
+        $categories = Category::all();
+        return Inertia::render('Tasks/Edit', compact('categories', 'task'));
     }
 
     /**
@@ -84,6 +73,17 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         //
+        $task->update($request->validate([
+            'title' => ['min:4', 'required', 'max:50'],
+            'body' => ['min:4', 'required', 'max:50'],
+            'category_id' => ['required'],
+            'done' => [],
+        ]));
+
+        return back(303)->with([
+            'message' => 'Task updated successfully',
+            'class' => 'alert alert-success'
+        ]);
     }
 
     /**
@@ -92,6 +92,10 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+        $task->delete();
+
+        return back(303);
+
     }
 
     public function getTasksByCategory(Category $category)
