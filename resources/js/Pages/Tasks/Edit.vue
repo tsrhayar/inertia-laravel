@@ -1,5 +1,6 @@
 <script setup>
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
 
 const props = defineProps({
     categories: {
@@ -17,11 +18,26 @@ const form = useForm({
     title: props.task.title,
     body: props.task.body,
     category_id: props.task.category_id,
-    done: props.task.done,
+    done: !!props.task.done,
 });
 
 const updateTask = () => {
-    form.put(route("tasks.update", props.task.id));
+    form.put(route("tasks.update", props.task.id), {
+        onSuccess: () => {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Task edited succefully",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+
+            
+        },
+        onFinish: () => {
+            // console.log(usePage().props.errors);
+        }
+    });
 };
 </script>
 
@@ -99,7 +115,6 @@ const updateTask = () => {
                             type="checkbox"
                             value=""
                             id="flexCheckChecked"
-                            :checked="form.done"
                             v-model="form.done"
                         />
                         <label class="form-check-label" for="flexCheckChecked">
@@ -111,7 +126,7 @@ const updateTask = () => {
                         type="submit"
                         class="btn btn-primary"
                     >
-                        Update
+                        {{ form.processing ? "Loading ..." : " Update" }}
                     </button>
                 </form>
             </div>

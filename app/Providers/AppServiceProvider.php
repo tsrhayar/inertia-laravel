@@ -22,16 +22,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(Request $request): void
     {
         //
-        Inertia::share(
-            [
-                'errors' => function () {
-                    return session()->get('errors') ? session()->get('errors')->getBag('default')->getMessages() : (object) [];
-                },
-                'flash' => [
-                    'message' => fn() => $request->session()->get('message'),
-                    'class' => fn() => $request->session()->get('class')
-                ],
-            ]
-        );
+        // Inertia::share(
+        //     [
+        //         'errors' => function () {
+        //             return session()->get('errors') ? session()->get('errors')->getBag('default')->getMessages() : (object) [];
+        //         },
+        //         'flash' => [
+        //             'message' => fn () => $request->session()->get('message'),
+        //             'class' => fn () => $request->session()->get('class')
+        //         ]
+        //     ]
+        // );
     }
 }

@@ -1,5 +1,6 @@
 <script setup>
 import { useForm } from "@inertiajs/vue3";
+import Swal from "sweetalert2";
 
 const props = defineProps({
     categories: {
@@ -15,7 +16,17 @@ const form = useForm({
 });
 
 const addTask = () => {
-    form.post("/tasks");
+    form.post("/tasks", {
+        onSuccess: () => {
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Task added succefully",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        },
+    });
 };
 </script>
 
@@ -92,7 +103,7 @@ const addTask = () => {
                         type="submit"
                         class="btn btn-primary"
                     >
-                        Submit
+                        {{ form.processing ? "Loading ..." : " Create" }}
                     </button>
                 </form>
             </div>

@@ -25,11 +25,12 @@ class TaskRequest extends FormRequest
             //
             'title' => 'required',
             'body' => 'required',
-            'category_id' => 'required',
+            'category_id' => 'required'
         ];
     }
 
-    public function attributes() {
+    public function attributes()
+    {
         return [
             'category_id' => 'category',
         ];

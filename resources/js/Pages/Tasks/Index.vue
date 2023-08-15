@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div
             v-if="$page.props.flash.message"
-            :class="$page.props.flash.class"
+            :class="[$page.props.flash.class, 'd-none']"
             role="alert"
         >
             {{ $page.props.flash.message }}
@@ -12,63 +12,37 @@
                 <Categories :categories="categories" />
             </div>
             <div class="col-10">
-                <div
-                    class="btn-group mb-2 me-2"
-                    role="group"
-                    aria-label="Basic outlined example"
-                >
-                    <Link
-                        :href="route('order.tasks', ['id', 'asc'])"
-                        :class="[
-                            'btn',
-                            'btn-sm',
-                            'btn-outline-primary',
-                            { active: isActiveRoute('/order/id/asc/tasks') },
-                        ]"
-                    >
-                        ID <i class="fa-solid fa-arrow-up"></i>
-                    </Link>
-                    <Link
-                    :href="route('order.tasks', ['id', 'desc'])"
-                        :class="[
-                            'btn',
-                            'btn-sm',
-                            'btn-outline-primary',
-                            { active: isActiveRoute('/order/id/desc/tasks') },
-                        ]"
-                    >
-                        ID <i class="fa-solid fa-arrow-down"></i>
-                    </Link>
-
-                    <Link
-                    :href="route('order.tasks', ['title', 'asc'])"
-                        :class="[
-                            'btn',
-                            'btn-sm',
-                            'btn-outline-primary',
-                            { active: isActiveRoute('/order/title/asc/tasks') },
-                        ]"
-                    >
-                        Title A-Z <i class="fa-solid fa-arrow-up"></i>
-                    </Link>
-                    <Link
-                    :href="route('order.tasks', ['title', 'desc'])"
-                        :class="[
-                            'btn',
-                            'btn-sm',
-                            'btn-outline-primary',
-                            {
-                                active: isActiveRoute(
-                                    '/order/title/desc/tasks'
-                                ),
-                            },
-                        ]"
-                    >
-                        Title Z-A <i class="fa-solid fa-arrow-down"></i>
-                    </Link>
+                <div class="row">
+                    <div class="col">
+                        <Sort />
+                    </div>
+                    <div class="col">
+                        <form @submit.prevent="searchTask">
+                            <div class="row">
+                                <div class="col-9">
+                                    <input
+                                        v-model="form.term"
+                                        class="form-control form-control-sm"
+                                        type="text"
+                                        placeholder="Search a task ..."
+                                    />
+                                </div>
+                                <div class="col-3">
+                                    <button
+                                        :disabled="!form.term"
+                                        type="submit"
+                                        class="w-100 btn btn-sm btn-primary"
+                                    >
+                                        Search
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+
                 <div>
-                    <TableTasks :tasks="tasks" />
+                    <TableTasks :tasks="tasks" :authUser="authUser" />
                 </div>
             </div>
         </div>
@@ -76,10 +50,10 @@
 </template>
 
 <script setup>
-import { Link } from "@inertiajs/vue3";
-
 import Categories from "@/Components/Categories.vue";
 import TableTasks from "@/Components/TableTasks.vue";
+import Sort from "@/Components/Sort.vue";
+import { useForm } from "@inertiajs/vue3";
 const props = defineProps({
     tasks: {
         type: Object,
@@ -89,11 +63,22 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    authUser: {
+        type: Object,
+        required: true,
+    },
 });
 
-const isActiveRoute = (path) => {
-    return window.location.pathname == path;
+const searchTask = () => {
+    form.get(route("search.tasks"));
 };
+
+let uri = window.location.search.substring(1);
+let params = new URLSearchParams(uri);
+let term = params.get("term");
+const form = useForm({
+    term: term || "",
+});
 </script>
 
 <style>

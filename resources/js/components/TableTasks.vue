@@ -7,7 +7,8 @@
                 <th>Body</th>
                 <th>Category</th>
                 <th>Done</th>
-                <th>Created</th>
+                <th>Created by</th>
+                <th>Created at</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -27,21 +28,33 @@
                         >Processing ...</span
                     >
                 </td>
+                <td class="truncate-td">
+                    {{ task.user.name }}
+                </td>
+
                 <td>{{ task.created_at }}</td>
                 <td>
-                    <Link
-                        class="btn btn-sm btn-outline-success"
-                        :href="route('tasks.edit', task.id)"
-                    >
-                        Update
-                    </Link>
-                    <button
-                        class="btn btn-sm btn-outline-danger ms-1"
-                        @click="deleteTask(task)"
-                    >
-                        Delete
-                    </button>
+                    <template v-if="task.user_id === authUser.id">
+                        <Link
+                            class="btn btn-sm btn-outline-success"
+                            :href="route('tasks.edit', task.id)"
+                        >
+                            Update
+                        </Link>
+                        <button
+                            class="btn btn-sm btn-outline-danger ms-1"
+                            @click="deleteTask(task)"
+                        >
+                            Delete
+                        </button>
+                    </template>
+                    <template v-else>
+                        <p> -- </p>
+                    </template>
                 </td>
+            </tr>
+            <tr v-if="!tasks.data.length">
+                <td colspan="7" class="text-center">Pas de taches</td>
             </tr>
         </tbody>
     </table>
@@ -59,6 +72,10 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    authUser: {
+        type: Object,
+        required: true,
+    },
 });
 
 const deleteTask = (task) => {
@@ -72,8 +89,17 @@ const deleteTask = (task) => {
         confirmButtonText: "Yes, delete it!",
     }).then((result) => {
         if (result.isConfirmed) {
-            router.delete(route("tasks.destroy", task.id));
-            Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            router.delete(route("tasks.destroy", task.id), {
+                onSuccess: () => {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Deleted!",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                },
+            });
         }
     });
 };

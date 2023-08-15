@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,6 +22,8 @@ class TaskFactory extends Factory
             //
             'title' => fake()->text(15),
             'body' => fake()->paragraph(),
-            'category_id' => Category::inRandomOrder()->first()->id,        ];
+            'category_id' => Category::inRandomOrder()->first()->id,
+            'user_id' => User::inRandomOrder()->first()->id,
+        ];
     }
 }
