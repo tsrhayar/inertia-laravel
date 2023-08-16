@@ -24,6 +24,7 @@ class TaskController extends Controller
         //
         $tasks = Task::with('category', 'user')->paginate(5);
         $authUser = auth()->user();
+        $isAdmin = auth()->user()->isAdmin;
         $categories = Category::has('tasks')->get();
         return Inertia::render('Tasks/Index', compact('tasks', 'categories', 'authUser'));
     }
@@ -52,14 +53,7 @@ class TaskController extends Controller
 
         $validatedData['user_id'] = Auth::user()->id;
 
-        // dd($validatedData);
         Task::create($validatedData);
-        // Task::create($request->validate([
-        //     'title' => ['min:4', 'required', 'max:50'],
-        //     'body' => ['min:4', 'required', 'max:50'],
-        //     'category_id' => ['required', 'exists:categories,id'],
-        //     'user_id' => auth()->user()->id,
-        // ]));
 
         return to_route('tasks.index')->with([
             'message' => 'Task created successfully',
@@ -92,8 +86,8 @@ class TaskController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'title' => ['min:4', 'required', 'max:50'],
-            'body' => ['min:4', 'required', 'max:50'],
+            'title' => ['required', 'min:4', 'max:50'],
+            'body' => ['required', 'min:4', 'max:50'],
             'category_id' => ['required'],
             'done' => []
         ]);
@@ -110,7 +104,7 @@ class TaskController extends Controller
                 'category_id' => $request->category_id,
                 'done' => $request->done,
             ]);
-            return     back(303);
+            return back(303);
         }
     }
 

@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/order/{column}/{direction}/tasks', [TaskController::class, 'getTasksOrderedBy'])->name('order.tasks');
     Route::get('/search/tasks', [TaskController::class, 'getTasksByTerm'])->name('search.tasks');
     Route::post('/user/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/user/profile', [AuthController::class, 'profile'])->name('profile');
 });
 
 Route::middleware('guest')->group(function () {

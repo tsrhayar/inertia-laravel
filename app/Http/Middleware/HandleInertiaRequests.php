@@ -41,13 +41,13 @@ class HandleInertiaRequests extends Middleware
                 return session()->get('errors') ? session()->get('errors')->getBag('default')->getMessages() : (object) [];
             },
             'flash' => [
-                'message' => fn () => $request->session()->get('message'),
-                'class' => fn () => $request->session()->get('class'),
-                'done' => fn () => $request->session()->get('done')
+                'message' => fn() => $request->session()->get('message'),
+                'class' => fn() => $request->session()->get('class'),
+                'done' => fn() => $request->session()->get('done')
             ],
-            'user' => fn () => $request->user()
-                ? $request->user()->only('id', 'name', 'email')
-                : null,
+            'user' => fn() => $request->user()
+            ? $request->user()->only('id', 'name', 'email', 'is_admin', 'photo_url')
+            : null,
         ]);
     }
 }

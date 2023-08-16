@@ -76,18 +76,16 @@
                         </Link>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="#"
-                                    >Another action</a
+                                <Link
+                                    :class="['dropdown-item']"
+                                    :href="route('profile')"
+                                    >Profile</Link
                                 >
                             </li>
                             <li><hr class="dropdown-divider" /></li>
                             <li>
                                 <Link
-                                    :class="[
-                                        'nav-link',
-                                        'border-0',
-                                        'bg-white',
-                                    ]"
+                                    :class="['dropdown-item']"
                                     method="post"
                                     as="button"
                                     :href="route('logout')"

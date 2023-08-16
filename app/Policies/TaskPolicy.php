@@ -23,6 +23,9 @@ class TaskPolicy
     public function view(User $user, Task $task): bool
     {
         //
+        if($user->id_admin) {
+            return true;
+        }
         return $user->id === $task->user_id;
     }
 
@@ -41,6 +44,11 @@ class TaskPolicy
     public function update(User $user, Task $task): bool
     {
         //
+        // dd($user);
+        if($user->is_admin) {
+            return true;
+        }
+
         return $user->id === $task->user_id;
     }
 
@@ -50,6 +58,9 @@ class TaskPolicy
     public function delete(User $user, Task $task): bool
     {
         //
+        if($user->is_admin) {
+            return true;
+        }
         return $user->id === $task->user_id;
     }
 

@@ -34,7 +34,9 @@
 
                 <td>{{ task.created_at }}</td>
                 <td>
-                    <template v-if="task.user_id === authUser.id">
+                    <template
+                        v-if="task.user_id === authUser.id || authUser.is_admin"
+                    >
                         <Link
                             class="btn btn-sm btn-outline-success"
                             :href="route('tasks.edit', task.id)"
@@ -49,7 +51,7 @@
                         </button>
                     </template>
                     <template v-else>
-                        <p> -- </p>
+                        <p>--</p>
                     </template>
                 </td>
             </tr>
@@ -78,6 +80,7 @@ const props = defineProps({
     },
 });
 
+console.log(props.authUser);
 const deleteTask = (task) => {
     Swal.fire({
         title: "Are you sure?",
