@@ -49,15 +49,13 @@ const addTask = () => {
                             id="title"
                             placeholder="title"
                         />
-                        <div v-if="form.errors.title">
-                            <span
-                                class="d-block text-danger fs-14px"
-                                v-for="(error, index) in form.errors.title"
-                                :key="index"
-                            >
-                                {{ error }}
-                            </span>
-                        </div>
+                        <span
+                            class="d-block text-danger fs-14px"
+                            v-for="(error, index) in form.errors.title"
+                            :key="index"
+                        >
+                            {{ error }}
+                        </span>
                     </div>
                     <div class="mb-3">
                         <label for="body" class="form-label">Body</label>

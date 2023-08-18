@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -23,7 +24,10 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'photo_url',
+    ];
 
+    protected $appends = [
+        'image'
     ];
 
     /**
@@ -45,4 +49,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function getImageAttribute()
+    {
+        // return asset('storage/' . $this->photo_url);
+        if (Storage::disk('public')->exists(auth()->user()->photo_url)) {
+            return asset('storage/' . $this->photo_url);
+        }
+
+        return $this->photo_url;
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Tasks::class);
+    }
 }

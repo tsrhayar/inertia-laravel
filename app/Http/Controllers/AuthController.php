@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -60,8 +61,8 @@ class AuthController extends Controller
             if (
 
                 auth()->attempt([
-                    "email"  => $request->email,
-                    "password"  => $request->password,
+                    "email" => $request->email,
+                    "password" => $request->password,
                 ], true)
             ) {
                 $request->session()->regenerate();
@@ -82,7 +83,38 @@ class AuthController extends Controller
         return redirect()->route('login');
     }
 
-    public function profile(Request $request){
+    public function profile(Request $request)
+    {
         return inertia::render('User/Profile');
+    }
+
+    public function updateProfileImage(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'photo_url' => ['required', 'mimes:jpeg,png,gif,bmp,tiff,jpg,webp,svg', 'max:2048'],
+        ]);
+
+        if ($validator->fails()) {
+            return back(303)
+                ->withErrors($validator)
+                ->withInput();
+        }
+        else {
+            if (Storage::disk('public')->exists(auth()->user()->photo_url)) {
+                Storage::disk('public')->delete(auth()->user()->photo_url);
+            }
+    
+            $file = $request->file('photo_url');
+            $path = $file->store('profiles', 'public');
+    
+            auth()->user()->update([
+                'photo_url' => $path,
+            ]);
+    
+            return redirect()->route('profile')->with([
+                "message" => "Profile updated successfully with new photo url",
+            ]);
+        }
+
     }
 }

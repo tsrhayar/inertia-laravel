@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
                 'done' => fn() => $request->session()->get('done')
             ],
             'user' => fn() => $request->user()
-            ? $request->user()->only('id', 'name', 'email', 'is_admin', 'photo_url')
+            ? $request->user()->only('id', 'name', 'email', 'is_admin', 'photo_url', 'image')
             : null,
         ]);
     }
